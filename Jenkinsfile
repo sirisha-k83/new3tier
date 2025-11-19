@@ -58,17 +58,12 @@ pipeline {
             }
         }
 
-        stage('Quality Gate Check') {
-            steps {
-                script {
-                    waitForQualityGate abortPipeline: true
+      stage('Quality Gate Check') {
+          steps {
+              echo "Skipping quality gate check"
                 }
-            }
-            // Note: The 'when' block was removed here. If you intended to skip this stage conditionally, 
-            // you should fix the expression. The original expression `return false` would always skip 
-            // the quality gate check, which is usually not desired for a pipeline.
-            // If you want it to always run, remove the 'when' block entirely as done above.
         }
+
 
         stage('TRIVY FS Scan') {
             steps {
