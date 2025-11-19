@@ -7,9 +7,9 @@ pipeline {
 
     environment {
         // --- SonarQube Variables ---
-        SONARQUBE_SERVER = 'Sonar_Scanner'   # The server name should match the one configured in Jenkins
-        SONAR_PROJECT_KEY = '3-Tier-DevopsShack' # The project key in SonarQube
-        SONAR_PROJECT_NAME = '3-tier-devopsshack' # The project name in SonarQube
+        SONARQUBE_SERVER = 'Sonar_Scanner'   
+        SONAR_PROJECT_KEY = '3-Tier-DevopsShack'
+        SONAR_PROJECT_NAME = '3-tier-devopsshack' 
         DB_HOST = 'mysql-db'           // Docker bridge gateway IP to access MySQL on the host VM when db on host, when db is on docker-compose, use 'mysql-db'
         DB_USER = 'app_user'
         DB_NAME = 'crud_app'
