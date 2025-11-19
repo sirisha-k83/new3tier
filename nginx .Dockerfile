@@ -1,4 +1,3 @@
-# --- STAGE 1: Extract the Static Build Artifacts from your Web-Tier Image ---
 FROM sirishak83/web-tier:latest AS build-stage
 
 # --- STAGE 2: Serve the Static Files with NGINX ---
