@@ -7,7 +7,7 @@ pipeline {
 
     environment {
         // --- SonarQube Variables ---
-        SONARQUBE_SERVER = 'Sonar_Scanner'
+        SONARQUBE_SERVER = 'Sonar_Server'
         SONAR_PROJECT_KEY = '3-tier-new'
         SONAR_PROJECT_NAME = '3-tier-new'
         DB_HOST = 'mysql-db'
