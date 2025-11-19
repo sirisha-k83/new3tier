@@ -8,8 +8,8 @@ pipeline {
     environment {
         // --- SonarQube Variables ---
         SONARQUBE_SERVER = 'Sonar_Scanner'   
-        SONAR_PROJECT_KEY = '3-Tier-DevopsShack'
-        SONAR_PROJECT_NAME = '3-tier-devopsshack' 
+        SONAR_PROJECT_KEY = '3-tier-new'
+        SONAR_PROJECT_NAME = '3-tier-new' 
         DB_HOST = 'mysql-db'           // Docker bridge gateway IP to access MySQL on the host VM when db on host, when db is on docker-compose, use 'mysql-db'
         DB_USER = 'app_user'
         DB_NAME = 'crud_app'
@@ -20,13 +20,13 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: 'master', url: 'https://github.com/sirisha-k83/3-Tier-AWSweb_project.git'
+                git branch: 'main', url: 'https://github.com/sirisha-k83/new3tier.git'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                nodejs('NodeJS 22.0.0') {  # Use the NodeJS installation configured in Jenkins, no need to install nginx here
+                nodejs('NodeJS 22.0.0') {  
                     dir('web-tier') {
                         sh 'npm install'
                         sh 'npm run build'
@@ -40,9 +40,8 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 script {
-                    def scannerHome = tool 'Sonar_Scanner' # The SonarQube scanner installation name in Jenkins
-                    
-                    withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_LOGIN_TOKEN')]) { # The SonarQube token stored in Jenkins credentials
+                    def scannerHome = tool 'Sonar_Scanner' 
+                       withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_LOGIN_TOKEN')]) { 
                         withSonarQubeEnv("${SONARQUBE_SERVER}") {
                             sh """
                                 ${scannerHome}/bin/sonar-scanner \\ 
@@ -59,7 +58,7 @@ pipeline {
         stage('Quality Gate Check') {
             when { 
                 expression { 
-                    return false // Forces the stage to be skipped
+                    return false 
                 }
             }
             steps {
