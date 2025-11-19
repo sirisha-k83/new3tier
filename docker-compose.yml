@@ -1,0 +1,42 @@
+version: '3.9'
+
+services:
+  mysql-db:
+    image: mysql:8
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: crud_app
+      MYSQL_USER: app_user
+      MYSQL_PASSWORD: app_pass123
+    ports:
+      - "3307:3306"
+
+  app-tier:
+    image: sirishak83/app-tier:latest
+    container_name: app-api
+    environment:
+      DB_HOST: mysql-db
+      DB_USER: app_user
+      DB_PWD: app_pass123
+      DB_DATABASE: crud_app
+    depends_on:
+      - mysql-db
+    ports:
+      - "5000:5000"
+
+  web-tier:
+    image: sirishak83/web-tier:latest
+    container_name: web-client
+    depends_on:
+      - app-tier
+    ports:
+      - "3000:3000"
+
+  nginx:
+    image: sirishak83/nginx:latest
+    container_name: nginx-proxy
+    depends_on:
+      - web-tier
+    ports:
+      - "80:80"
