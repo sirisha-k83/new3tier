@@ -89,39 +89,44 @@ pipeline {
             }
         }
         
-        stage('Docker Build & Push') {
-            steps {
-                script {
-                    // Use withDockerRegistry for authentication to the Docker registry (e.g., Docker Hub)
-                    withDockerRegistry(credentialsId: 'docker', url: '') {
-                        
-                        // Define a common tag (e.g., current build number) for versioning
-                        def tag = "${env.BUILD_NUMBER}"
-                        
-                        // --- Build and Push APP-TIER IMAGE ---
-                        sh "docker build -t ${DOCKER_REPOSITORY}/app-tier:${tag} ./app-tier"
-                        sh "docker push ${DOCKER_REPOSITORY}/app-tier:${tag}"
+       stage('Docker Build & Push') {
+    steps {
+        script {
+            // Use withDockerRegistry for authentication to the Docker registry (e.g., Docker Hub)
+            withDockerRegistry(credentialsId: 'docker', url: '') {
+                
+                // Define a common tag (e.g., current build number) for versioning
+                def tag = "${env.BUILD_NUMBER}"
+                def repo = "${DOCKER_REPOSITORY}" // Use a short variable for clarity
 
-                        // --- Build and Push WEB-TIER IMAGE ---
-                        sh "docker build -t ${DOCKER_REPOSITORY}/web-tier:${tag} ./web-tier"
-                        sh "docker push ${DOCKER_REPOSITORY}/web-tier:${tag}"
+                // --- BUILD AND PUSH APP-TIER IMAGE ---
+                sh "docker build -t ${repo}/app-tier:${tag} ./app-tier"
+                sh "docker tag ${repo}/app-tier:${tag} ${repo}/app-tier:latest" // Tag as latest
+                sh "docker push ${repo}/app-tier:${tag}"
+                sh "docker push ${repo}/app-tier:latest" // PUSH latest (making it available immediately)
 
-                        // --- Build and Push NGINX IMAGE ---
-                        // In your Jenkinsfile, update this line:
-                        sh 'docker build -t sirishak83/nginx:28 -f **"nginx .Dockerfile"** .'
-                        sh "docker push ${DOCKER_REPOSITORY}/nginx:${tag}"
-                        
-                        // Optional: Tag and push as 'latest' as well
-                        sh "docker tag ${DOCKER_REPOSITORY}/app-tier:${tag} ${DOCKER_REPOSITORY}/app-tier:latest"
-                        sh "docker push ${DOCKER_REPOSITORY}/app-tier:latest"
-                        sh "docker tag ${DOCKER_REPOSITORY}/web-tier:${tag} ${DOCKER_REPOSITORY}/web-tier:latest"
-                        sh "docker push ${DOCKER_REPOSITORY}/web-tier:latest"
-                        sh "docker tag ${DOCKER_REPOSITORY}/nginx:${tag} ${DOCKER_REPOSITORY}/nginx:latest"
-                        sh "docker push ${DOCKER_REPOSITORY}/nginx:latest"
-                    }
-                }
+                // --- BUILD AND PUSH WEB-TIER IMAGE ---
+                sh "docker build -t ${repo}/web-tier:${tag} ./web-tier"
+                sh "docker tag ${repo}/web-tier:${tag} ${repo}/web-tier:latest" // Tag as latest
+                sh "docker push ${repo}/web-tier:${tag}"
+                sh "docker push ${repo}/web-tier:latest" // 👈 PUSH latest (MAKING IT AVAILABLE FOR NGINX BUILD)
+
+                // --------------------------------------------------------------------------------
+                // --- BUILD AND PUSH NGINX IMAGE ---
+                // NOTE: The Nginx image is now built AFTER web-tier:latest is pushed and available.
+                // --------------------------------------------------------------------------------
+                
+                // Corrected Nginx build command using the common tag
+                sh "docker build -t ${repo}/nginx:${tag} -f 'nginx .Dockerfile' ."
+                
+                // Tag and Push Nginx
+                sh "docker tag ${repo}/nginx:${tag} ${repo}/nginx:latest"
+                sh "docker push ${repo}/nginx:${tag}"
+                sh "docker push ${repo}/nginx:latest"
             }
         }
+    }
+}
         
         stage('Deploy') {
             steps {
