@@ -1,7 +1,7 @@
 FROM node:22-alpine
 WORKDIR /app
 # Install dependencies
-COPY package*.json ./  # this folder only has package.json files
+COPY package.json ./  # this folder only has package.json files
 RUN npm ci  # or `npm install`
 
 # Copy source code
