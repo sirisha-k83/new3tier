@@ -7,9 +7,6 @@ RUN npm install
 # Copy source code
 COPY . .
 
-# (optional) Build if needed (e.g., Next.js)
-RUN npm run build
-
 # Expose port
 EXPOSE 3000
 
