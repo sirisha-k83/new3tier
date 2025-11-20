@@ -107,7 +107,8 @@ pipeline {
                         sh "docker push ${DOCKER_REPOSITORY}/web-tier:${tag}"
 
                         // --- Build and Push NGINX IMAGE ---
-                        sh "docker build -t ${DOCKER_REPOSITORY}/nginx:${tag} -f nginx.Dockerfile ."
+                        // In your Jenkinsfile, update this line:
+                        sh 'docker build -t sirishak83/nginx:28 -f **"nginx .Dockerfile"** .'
                         sh "docker push ${DOCKER_REPOSITORY}/nginx:${tag}"
                         
                         // Optional: Tag and push as 'latest' as well
