@@ -1,4 +1,4 @@
-FROM node:NodeJS 22.0.0 
+FROM node:22-alpine
 WORKDIR /app
 # Install dependencies
 COPY package*.json ./  # this folder only has package.json files
