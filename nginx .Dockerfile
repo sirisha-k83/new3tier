@@ -1,15 +1,14 @@
 FROM sirishak83/web-tier:latest AS build-stage
 
-# --- STAGE 2: Serve Static Files with NGINX ---
 FROM nginx:latest
 
-# REMOVE the default config so it does NOT conflict
+# REMOVE the default Nginx config so only your nginx.conf is used
 RUN rm -f /etc/nginx/conf.d/default.conf
 
-# Copy your custom nginx.conf
+# Copy your custom nginx configuration
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Copy React build files
+# Copy static files
 COPY --from=build-stage /app/build /usr/share/nginx/html
 
 EXPOSE 80
