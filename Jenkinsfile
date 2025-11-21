@@ -122,18 +122,16 @@
 }
         
         stage('Deploy') {
-            steps {
-                script {
-                     sh """
-                            # Stop previous stack (if running)
-                            docker compose down || true
-                            
-                            # Start new stack with secure password
-                            DB_PASS=${DB_PASS} docker compose up -d
-                        """
-                        // Alternative: Use a deployment tool (e.g., kubectl apply for Kubernetes) if this is an orchestrator-based deployment
-                    }
-                }
+           steps {
+               script {
+             // Hardcoded password for testing
+                dir("${env.WORKSPACE}") {   // ensures we are in the repo folder
+                sh """
+                    docker compose down || true
+                    DB_PASS=${DB_PASS} docker compose up -d
+                """
             }
         }
+    }
+}
 }
