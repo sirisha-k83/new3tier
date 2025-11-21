@@ -6,7 +6,7 @@ FROM nginx:latest
 RUN rm -f /etc/nginx/conf.d/default.conf
 
 # Copy your custom nginx configuration
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY web-tier/nginx.conf /etc/nginx/nginx.conf
 
 # Copy static files
 COPY --from=build-stage /app/build /usr/share/nginx/html
