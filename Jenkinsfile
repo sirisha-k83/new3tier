@@ -124,12 +124,7 @@
         stage('Deploy') {
             steps {
                 script {
-                    // 2. Security Fix: Use withCredentials to securely inject the DB_PASS for deployment
-                    withCredentials([string(credentialsId: 'DB_PASS_CREDENTIAL_ID', variable: 'SECURE_DB_PASS')]) {
-                        
-                        // Set the secure password as an environment variable for the compose command scope
-                        // Note: This requires the docker-compose file to use the DB_PASS variable.
-                        sh """
+                     sh """
                             # Stop previous stack (if running)
                             docker compose down || true
                             
