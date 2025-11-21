@@ -17,7 +17,7 @@
         DB_HOST = 'mysql-db'
         DB_USER = 'app_user'
         DB_NAME = 'crud_app'
-        // DB_PASS is moved to a withCredentials block for security
+        DB_PASS = 'app_pass123'
         DB_PORT = '3306'
 
         // --- Docker Registry Variables ---
@@ -134,7 +134,7 @@
                             docker compose down || true
                             
                             # Start new stack with secure password
-                            DB_PASS=${SECURE_DB_PASS} docker compose up -d
+                            DB_PASS=${DB_PASS} docker compose up -d
                         """
                         // Alternative: Use a deployment tool (e.g., kubectl apply for Kubernetes) if this is an orchestrator-based deployment
                     }
