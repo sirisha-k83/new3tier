@@ -1,4 +1,4 @@
-pipeline {
+        pipeline {
     // 1. Agent: Use a specific label for better control, or keep 'any' if generic is fine.
     agent any
 
@@ -105,21 +105,14 @@ pipeline {
                 sh "docker push ${repo}/app-tier:${tag}"
                 sh "docker push ${repo}/app-tier:latest" // PUSH latest (making it available immediately)
 
-                // --- BUILD AND PUSH WEB-TIER IMAGE ---
+              // --- BUILD AND PUSH WEB-TIER IMAGE ---
                 sh "docker build -t ${repo}/web-tier:${tag} ./web-tier"
-                sh "docker tag ${repo}/web-tier:${tag} ${repo}/web-tier:latest" // Tag as latest
+                sh "docker tag ${repo}/web-tier:${tag} ${repo}/web-tier:latest"
                 sh "docker push ${repo}/web-tier:${tag}"
-                sh "docker push ${repo}/web-tier:latest" // 👈 PUSH latest (MAKING IT AVAILABLE FOR NGINX BUILD)
+                 sh "docker push ${repo}/web-tier:latest"
 
-                // --------------------------------------------------------------------------------
-                // --- BUILD AND PUSH NGINX IMAGE ---
-                // NOTE: The Nginx image is now built AFTER web-tier:latest is pushed and available.
-                // --------------------------------------------------------------------------------
-                
-                // Corrected Nginx build command using the common tag
-                sh "docker build -t ${repo}/nginx:${tag} -f 'nginx .Dockerfile' ."
-                
-                // Tag and Push Nginx
+               // --- BUILD AND PUSH NGINX IMAGE ---
+                sh "docker build -t ${repo}/nginx:${tag} -f web-tier/Dockerfile web-tier"
                 sh "docker tag ${repo}/nginx:${tag} ${repo}/nginx:latest"
                 sh "docker push ${repo}/nginx:${tag}"
                 sh "docker push ${repo}/nginx:latest"
