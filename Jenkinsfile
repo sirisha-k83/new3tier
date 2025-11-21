@@ -112,7 +112,7 @@
                  sh "docker push ${repo}/web-tier:latest"
 
                // --- BUILD AND PUSH NGINX IMAGE ---
-                sh "docker build -t ${repo}/nginx:${tag} -f web-tier/Dockerfile web-tier"
+                sh "docker build -t ${repo}/nginx:${tag} -f nginx.Dockerfile ."
                 sh "docker tag ${repo}/nginx:${tag} ${repo}/nginx:latest"
                 sh "docker push ${repo}/nginx:${tag}"
                 sh "docker push ${repo}/nginx:latest"
